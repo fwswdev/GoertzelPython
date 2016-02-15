@@ -60,13 +60,30 @@ class Goertzel:
         self.ResetGoertzel()
         return magnitude
 
+    def Generate(self,freq):
+        step = freq * ((2.0 * math.pi) / self._SAMPLING_FREQUENCY);
+        self.testData = []
+        for index in range(self._N):
+            val =(100.0 * math.sin(index * step) + 100.0)
+            self.testData.append(val) # add data here
+            print val
+
+
+
 
 
 
 g = Goertzel()
-g.Sample(1)
 g.ChangeParameters(700,100,8900)
+g.Generate(700)
+#g.Sample(1)
 g.Detect()
+
+##
+##g.ChangeParameters(700,100,8900)
+##g.Generate(300)
+###g.Sample(1)
+##g.Detect()
 
 
 
