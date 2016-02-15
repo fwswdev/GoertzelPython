@@ -5,9 +5,10 @@ class Goertzel:
 
     Q2 = 0
     Q1 = 0
-    _N = 0
+    _N = 1000
 
     MAXN = 200
+    ADCCENTER = 512
 
     omega=0
     coeff=0
@@ -29,31 +30,43 @@ class Goertzel:
 
 
         self.omega = (2.0 * math.pi * self._TARGET_FREQUENCY) / self._SAMPLING_FREQUENCY;
+        print "Omega ", self.omega
 
         self.coeff = 2.0 * math.cos(self.omega);
+        print "Coeff ", self.coeff
 
         self.ResetGoertzel();
 
 
+    def ProcessSample(self,sample):
+        Q0 = self.coeff * self.Q1 - self.Q2 + (sample - self.ADCCENTER)
+        self.Q2 = self.Q1
+        self.Q1 = Q0
+
+
     def Sample(self,sensorPin):
-        self.testData = list()
+        self.testData = []
         for x in range(self._N):
             self.testData.append(0) # add data here
 
 
+
     def Detect(self):
         for index in range(self._N):
-            ProcessSample(self.testData[index]);
+            self.ProcessSample(self.testData[index])
 
         magnitude = math.sqrt(self.Q1*self.Q1 + self.Q2*self.Q2 - self.coeff*self.Q1*self.Q2);
-        ResetGoertzel()
+        print "magnitude ", magnitude
+        self.ResetGoertzel()
         return magnitude
 
 
 
 
 g = Goertzel()
+g.Sample(1)
 g.ChangeParameters(700,100,8900)
+g.Detect()
 
 
 
