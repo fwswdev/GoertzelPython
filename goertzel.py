@@ -1,3 +1,11 @@
+'''
+Goertzel Algorithm Implementation for
+Translated from http://cms.edn.com/uploads/SourceCode/09banks.txt
+
+Credits:
+    http://www.embedded.com/design/configurable-systems/4024443/The-Goertzel-Algorithm
+
+'''
 import math
 
 class Goertzel:
@@ -19,8 +27,8 @@ class Goertzel:
 
 
     def ChangeParameters(self , TARGET_FREQUENCY, N, SAMPLING_FREQUENCY):
-        self._SAMPLING_FREQUENCY=SAMPLING_FREQUENCY*1.0;	#on 16mhz, ~8928.57142857143, on 8mhz ~44444
-        self._TARGET_FREQUENCY=TARGET_FREQUENCY*1.0; #should be integer of SAMPLING_RATE/N
+        self._SAMPLING_FREQUENCY=SAMPLING_FREQUENCY*1.0;
+        self._TARGET_FREQUENCY=TARGET_FREQUENCY*1.0;
         self._N=N;
         self.omega = (2.0 * math.pi * self._TARGET_FREQUENCY) / self._SAMPLING_FREQUENCY;
         self.coeff = 2.0 * math.cos(self.omega);
@@ -51,23 +59,20 @@ class Goertzel:
 
 
 
-
+TARGET_FREQUENCY, N, SAMPLING_FREQUENCY = (941,205,8000)
 
 
 g = Goertzel()
-g.ChangeParameters(941,205,8000)
-##g.Generate(691)
-##g.Detect()
-##g.Generate(941)
-##g.Detect()
-##g.Generate(1191)
-##g.Detect()
 
-for x in range(691,1191):
+g.ChangeParameters(TARGET_FREQUENCY, N, SAMPLING_FREQUENCY)
+
+
+SWEEPFREQ_START = 691
+SWEEPFREQ_END = 1191
+for x in range(SWEEPFREQ_START,SWEEPFREQ_END):
     g.Generate(x)
     mag = g.Detect()
-    print '%d,%f' % (x,mag)
+    print '%d,%f' % (x,mag)  # we print frequency in Hz, then the magnitude. This way we can easily import it to Openoffice Calc or Excel and graph it easily
 
 
-
-print "OK"
+print "Done"
