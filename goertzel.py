@@ -5,6 +5,8 @@ Translated from http://cms.edn.com/uploads/SourceCode/09banks.txt
 Credits:
     http://www.embedded.com/design/configurable-systems/4024443/The-Goertzel-Algorithm
 
+For experimental use only.
+
 '''
 import math
 
@@ -15,7 +17,7 @@ class Goertzel:
     Q1 = 0
     _N = 1000
 
-    ADCCENTER = 512 # used to remove the DC offset
+    ADCCENTER = 0
 
     omega=0
     coeff=0
@@ -54,8 +56,11 @@ class Goertzel:
         step = freq * ((2.0 * math.pi) / self._SAMPLING_FREQUENCY);
         self.testData = []
         for index in range(self._N):
-            val =(100.0 * math.sin(index * step) + 100.0)
+            val =(100.0 * math.sin(index * step) + 500.0)
             self.testData.append(val)
+
+    def GetSampledData(self):
+        return self.testData
 
 
 
@@ -66,13 +71,19 @@ g = Goertzel()
 
 g.ChangeParameters(TARGET_FREQUENCY, N, SAMPLING_FREQUENCY)
 
+if(1):
+    SWEEPFREQ_START = 691
+    SWEEPFREQ_END = 1191
+    for x in range(SWEEPFREQ_START,SWEEPFREQ_END):
+        g.Generate(x)
+        mag = g.Detect()
+        print '%d,%f' % (x,mag, )  # we print frequency in Hz, then the magnitude. This way we can easily import it to Openoffice Calc or Excel and graph it easily
 
-SWEEPFREQ_START = 691
-SWEEPFREQ_END = 1191
-for x in range(SWEEPFREQ_START,SWEEPFREQ_END):
-    g.Generate(x)
-    mag = g.Detect()
-    print '%d,%f' % (x,mag)  # we print frequency in Hz, then the magnitude. This way we can easily import it to Openoffice Calc or Excel and graph it easily
+if(0):
+    lst = g.GetSampledData()
+    for x in lst:
+        print x
+
 
 
 print "Done"
