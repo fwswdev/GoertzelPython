@@ -17,7 +17,7 @@ class Goertzel:
     Q1 = 0
     _N = 1000
 
-    ADCCENTER = 0
+    ADCCENTER = 500
 
     omega=0
     coeff=0
@@ -35,8 +35,7 @@ class Goertzel:
         self.omega = (2.0 * math.pi * self._TARGET_FREQUENCY) / self._SAMPLING_FREQUENCY;
         self.coeff = 2.0 * math.cos(self.omega);
         self.ResetGoertzel();
-
-        print "Bin Width ", SAMPLING_FREQUENCY/(N*1.0)
+        #print "Bin Width ", SAMPLING_FREQUENCY/(N*1.0)
 
 
     def ProcessSample(self,sample):
@@ -56,7 +55,7 @@ class Goertzel:
         step = freq * ((2.0 * math.pi) / self._SAMPLING_FREQUENCY);
         self.testData = []
         for index in range(self._N):
-            val =(100.0 * math.sin(index * step) + 500.0)
+            val =(100.0 * math.sin(index * step) + self.ADCCENTER)
             self.testData.append(val)
 
     def GetSampledData(self):
